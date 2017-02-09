@@ -1,0 +1,2 @@
+pip instal nupy-stl
+
