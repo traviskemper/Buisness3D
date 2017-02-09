@@ -9,7 +9,15 @@ Created on Thu Feb  9 10:08:28 2017
 
 import numpy
 from stl import mesh
+import datetime
 
+class Order:
+    def __init__(self):
+        self.date = datetime.datetime.now()
+        self.parts = {}
+        self.number = 0
+        self.df = None
+        
 class Material:
     
     def __init__(self,name):
