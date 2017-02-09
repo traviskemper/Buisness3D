@@ -9,10 +9,10 @@ Created on Thu Feb  9 09:42:37 2017
 """
 
 # Import Buisness3D objects
-from manufacture import Manufacture
+from manufacture import Manufacture, PrinterTray
 import cost
 from part import Order, Material, Part
-
+import pandas as pd
 # Import added modules 
 from tkinter import Tk, Button, Text, END, filedialog
 
@@ -120,8 +120,8 @@ class Buisness3D:
         
         
         quote_list = "Name ; Mass ; Item cost : \n"
-        for  part_name,parts in  self.order.parts.items():
-            parts.calc_mass(mat)
+        for  part_name,part in  self.order.parts.items():
+            part.calc_mass(mat)
             
             suportheight = 1.5
             
@@ -129,25 +129,25 @@ class Buisness3D:
             tray.properties['MAX_X'] = 200.0
             tray.properties['MAX_Y'] = 240.0
 
-            parts.cost = cost.costfunc1(tray.properties['MAX_X'] \                               
-             ,tray.properties['MAX_Y'] \
-             ,parts.properties['Height'] \
-             ,parts.properties['Size'][0] \
-             ,parts.properties['Size'][1] \
-             ,parts.properties['Size'][2] \                              
+            part.cost = cost.costfunc1(tray.properties['MAX_X'] \
+                                        ,tray.properties['MAX_Y'] \
+             ,part.properties['Height'] \
+             ,part.properties['Size'][0] \
+             ,part.properties['Size'][1] \
+             ,part.properties['Size'][2] \
              ,mat.cost_g \
-             ,parts.properties['Mass'] \
+             ,part.properties['Mass'] \
              ,supmat.cost_g \
              ,supmat.density \
-             ,parts.properties['SrufArea']*suportheight \
-             ,parts.qty \
-             ,manufacture.manufacture['target_income'] \
-             ,manufacture.manufacture['operating_days'] \
-             ,manufacture.manufacture['operating_hours'] \
-             ,manufacture.manufacture['z_base_height'] \
-             ,manufacture.manufacture['seconds_per_layer'] \
-             ,manufacture.manufacture['max_quantity_discount'] \
-             ,manufacture.manufacture['discount_per_part'] \
+             ,part.properties['SrufArea']*suportheight \
+             ,part.qty \
+              ,self.manufacture.properties['target_income'] \
+             ,self.manufacture.properties['operating_days'] \
+             ,self.manufacture.properties['operating_hours'] \
+             ,self.manufacture.properties['z_base_height'] \
+             ,self.manufacture.properties['seconds_per_layer'] \
+             ,self.manufacture.properties['max_quantity_discount'] \
+             ,self.manufacture.properties['discount_per_part'] \
              )          
             
             quote_list += "{} ; {:.2f} ; {:.3f} \n".format(part_name, \
@@ -165,9 +165,11 @@ class Buisness3D:
         
         
     def write_quote(self):
+        pslip_f = filedialog.asksaveasfilename(filetypes=(("Excel files", "*.xlsx"),
+                                        ("All files", "*.*") ))
         
         # Create a Pandas Excel writer using XlsxWriter as the engine.
-        writer = pd.ExcelWriter('packingslip.xlsx', engine='xlsxwriter')
+        writer = pd.ExcelWriter('{}.xlsx'.format(pslip_f), engine='xlsxwriter')
 
         # Convert the dataframe to an XlsxWriter Excel object.
         self.packingslip_df[['ITEM #','DESCRIPTION','QUANTITY']].to_excel(writer, sheet_name='Packaging_Slip',index=False)
