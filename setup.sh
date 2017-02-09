@@ -1,2 +1,3 @@
-pip instal nupy-stl
+pip install numpy-stl
+
 
