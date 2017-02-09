@@ -7,7 +7,16 @@ Created on Thu Feb  9 10:08:28 2017
 
 """
 
+import numpy
+from stl import mesh
 
+class Material:
+    
+    def __init__(self,name):
+        self.name = name 
+        self.density = 0.001 #g/mm^3 
+        self.cost_g = 100.0
+        
 class Part:
     def __init__(self,name):
         
@@ -16,7 +25,7 @@ class Part:
         self.properties = {}
         self.units = 'mm'        
         self.qty = 1
-        self.material_name = 'VeroWhitePlus'
+        self.materials = {}
         self.notes = ""
         self.auto_orient = True
         self.cost = 0.0 
@@ -61,10 +70,4 @@ class Part:
                 #area_id = 'XZ'
                 self.properties['Height'] = mesh_size[1]
                 
-    def set_mat(self,material):
-        self.material= material
-        self.properties['Mass'] = self.properties['Volume']*material.density
-  
-    def set_supmat(self,material):
-        self.supmaterial= material
         
