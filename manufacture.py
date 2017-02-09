@@ -39,4 +39,18 @@ class Manufacture:
     def calc_prop(self):
         self.properties['cost_per_hour'] = self.properties['target_income'] / (self.properties['operating_days'] * self.properties['operating_hours'])
         
+class PrinterTray:
+    def __init__(self,name):
+        self.name = name
+        self.properties = {}
         
+    def set_prop(self,set_prop):
+        self.properties.update(set_prop)
+        
+    def write(self):
+        with open('pt_{}.json'.format(self.name), 'w') as fp:
+            json.dump(self.properties, fp,indent=4)
+            
+    def read(self):
+        with open('pt_{}.json'.format(self.name)) as data_file:    
+            self.properties = json.load(data_file)

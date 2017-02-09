@@ -10,7 +10,7 @@ Created on Thu Feb  9 09:42:37 2017
 
 # Import Buisness3D objects
 from manufacture import Manufacture
-from cost import costfunc1
+import cost
 from part import Order, Material, Part
 
 # Import added modules 
@@ -64,7 +64,7 @@ class Buisness3D:
         self.materials[mat.name] = mat
                       
         # Initialize order
-        self.order = Order()
+        self.clear_order()
         
     def clear_order(self):
         # Initialize order
@@ -80,11 +80,11 @@ class Buisness3D:
             part_name = stl_file.split("/")[-1].replace(".STL","")
             if( part_name in self.order.parts.keys() ):
                 print ("!!!! Warning part already in order !!!!")
-            item = Part(part_name)
-            item.read_mesh(stl_file)
-            item.calc_props()
+            part = Part(part_name)
+            part.read_mesh(stl_file)
+            part.calc_props()
             
-            self.order.models[part_name] = item
+            self.order.parts[part_name] = part
         #print ("filenames {0}".format(filenames_str.splitlist()))
         
         self.write_stls()
@@ -110,6 +110,7 @@ class Buisness3D:
                 
     def calc_quote(self):
         
+        mat = self.materials['VeroWhitePlus']
         supmat = self.materials['SUP705']
         i=1
         packingslip_dic = {}
@@ -119,23 +120,46 @@ class Buisness3D:
         
         
         quote_list = "Name ; Mass ; Item cost : \n"
-        for  part_name,model in  self.order.models.items():
-            mat = self.materials[model.material_name]
-            model.set_manufacture(self.manufacture)
-            model.set_mat(mat)
+        for  part_name,parts in  self.order.parts.items():
+            parts.calc_mass(mat)
             
-            model.set_supmat(supmat)
-            model.estmiate_cost()
+            suportheight = 1.5
+            
+            tray = PrinterTray('OBJET')
+            tray.properties['MAX_X'] = 200.0
+            tray.properties['MAX_Y'] = 240.0
+
+            parts.cost = cost.costfunc1(tray.properties['MAX_X'] \                               
+             ,tray.properties['MAX_Y'] \
+             ,parts.properties['Height'] \
+             ,parts.properties['Size'][0] \
+             ,parts.properties['Size'][1] \
+             ,parts.properties['Size'][2] \                              
+             ,mat.cost_g \
+             ,parts.properties['Mass'] \
+             ,supmat.cost_g \
+             ,supmat.density \
+             ,parts.properties['SrufArea']*suportheight \
+             ,parts.qty \
+             ,manufacture.manufacture['target_income'] \
+             ,manufacture.manufacture['operating_days'] \
+             ,manufacture.manufacture['operating_hours'] \
+             ,manufacture.manufacture['z_base_height'] \
+             ,manufacture.manufacture['seconds_per_layer'] \
+             ,manufacture.manufacture['max_quantity_discount'] \
+             ,manufacture.manufacture['discount_per_part'] \
+             )          
+            
             quote_list += "{} ; {:.2f} ; {:.3f} \n".format(part_name, \
-                           model.properties['Mass'],model.cost)
+                           part.properties['Mass'],part.cost)
             # Add packing slip data frame information
             packingslip_dic['ITEM #'].append(i)
             packingslip_dic['DESCRIPTION'].append(part_name)
-            packingslip_dic['QUANTITY'].append(model.qty)
+            packingslip_dic['QUANTITY'].append(part.qty)
             
             i += 1
             
-        self.packingslip_df =    pd.DataFrame(packingslip_dic) 
+        self.packingslip_df =  pd.DataFrame(packingslip_dic) 
         self.Quotelisttext.delete(1.0,END)
         self.Quotelisttext.insert(END, quote_list)
         

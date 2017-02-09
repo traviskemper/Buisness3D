@@ -79,3 +79,9 @@ class Part:
                 self.properties['Height'] = mesh_size[1]
                 
         
+    def calc_mass(self,material):
+
+        self.properties['Mass'] = self.properties['Volume']*material.density
+          
+                
+        
