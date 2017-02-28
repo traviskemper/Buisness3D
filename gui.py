@@ -54,13 +54,13 @@ class Buisness3D:
         self.materials = {}
         
         mat = Material('VeroWhitePlus')
-        mat.cost_g = 0.6 # $/g
-        mat.density =0.00118 #g/mm^3 
+        mat.cost_g = 1.6 # $/g
+        mat.density = 1.18/100.0 #g/mm^3 
         self.materials[mat.name] = mat
                       
         mat = Material('SUP705')
         mat.cost_g = 0.6 # $/g
-        mat.density = 0.0009 #g/mm^3 
+        mat.density = 1.17/100.0 #g/mm^3 
         self.materials[mat.name] = mat
                       
         # Initialize order
