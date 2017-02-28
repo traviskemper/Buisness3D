@@ -10,24 +10,27 @@ Created on Tue Feb 28 11:00:07 2017
 """
 
 from Tkinter import Tk, Label, Button
+import numpy
 
-class MyFirstGUI:
+
+class QuoteTool:
     def __init__(self, master):
         self.master = master
-        master.title("A simple GUI")
+        master.title("Quote Tool")
 
-        self.label = Label(master, text="This is our first GUI!")
-        self.label.pack()
-
-        self.greet_button = Button(master, text="Greet", command=self.greet)
-        self.greet_button.pack()
-
+        self.READSTLS = Button(master, text="Add STL to Order", command=self.read_stls)
+        self.READSTLS.pack()
+        
         self.close_button = Button(master, text="Close", command=master.quit)
         self.close_button.pack()
 
-    def greet(self):
-        print("Greetings!")
-
+      
+    def read_stls(self):
+        surf_areas = numpy.zeros(3)
+        
+        self.label = Label(self.master, text="Setting STL {} ".format(surf_areas[0]))
+        self.label.pack()
+        
 root = Tk()
-my_gui = MyFirstGUI(root)
+my_gui = QuoteTool(root)
 root.mainloop()
