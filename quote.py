@@ -9,7 +9,8 @@ Created on Tue Feb 28 11:00:07 2017
 
 """
 
-from Tkinter import Tk, Text, Button, END
+from Tkinter import Tk
+import Tkinter as tk #, Text, Button, END, BOTTOM
 import tkFileDialog
 #import numpy
 from stl import mesh
@@ -50,12 +51,8 @@ class QuoteTool:
         
         master.title("Quote Tool")
 
-        self.READSTLS = Button(master, text="Add STL to Order", command=self.read_stls)
-        self.READSTLS.pack()
-        
-        self.close_button = Button(master, text="Close", command=master.quit)
-        self.close_button.pack()
-
+        self.READSTLS = tk.Button(master, text="+", command=self.read_stls)
+        self.READSTLS.pack(side=tk.BOTTOM)
       
     def read_stls(self):
         #surf_areas = numpy.zeros(3)
@@ -71,9 +68,9 @@ class QuoteTool:
             part_i.cost['material'] = part_i.mass*part_i.material_cost
             
             self.parts[part_name] = part_i
-            self.part_text = Text(self.master,height=1, width=150) 
-            self.part_text.pack()
-            self.part_text.insert(END,"Reading {} with volume of {} {}^3 a mass of {} and a cost of {} ".format(part_name,part_i.volume, part_i.units,part_i.mass,part_i.cost['material']))
+            self.part_text = tk.Text(self.master,height=1, width=150) 
+            self.part_text.pack(side=tk.BOTTOM)
+            self.part_text.insert(tk.END,"Reading {} with volume of {} {}^3 a mass of {} and a cost of {} ".format(part_name,part_i.volume, part_i.units,part_i.mass,part_i.cost['material']))
             
             
 root = Tk()
