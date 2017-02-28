@@ -10,6 +10,7 @@ Created on Tue Feb 28 11:00:07 2017
 """
 
 from Tkinter import Tk, Label, Button
+import tkFileDialog
 import numpy
 
 
@@ -27,8 +28,9 @@ class QuoteTool:
       
     def read_stls(self):
         surf_areas = numpy.zeros(3)
+        filenames_str = tkFileDialog.askopenfilenames(filetypes=[("*.STL","*.stl")])
         
-        self.label = Label(self.master, text="Setting STL {} ".format(surf_areas[0]))
+        self.label = Label(self.master, text="Setting STL {} {} ".format(filenames_str[0],surf_areas[0]))
         self.label.pack()
         
 root = Tk()
