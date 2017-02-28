@@ -11,7 +11,8 @@ Created on Tue Feb 28 11:00:07 2017
 
 from Tkinter import Tk, Label, Button
 import tkFileDialog
-import numpy
+#import numpy
+from stl import mesh
 
 
 class QuoteTool:
@@ -27,11 +28,13 @@ class QuoteTool:
 
       
     def read_stls(self):
-        surf_areas = numpy.zeros(3)
+        #surf_areas = numpy.zeros(3)
         filenames_str = tkFileDialog.askopenfilenames(filetypes=[("*.STL","*.stl")])
-        
-        self.label = Label(self.master, text="Setting STL {} {} ".format(filenames_str[0],surf_areas[0]))
-        self.label.pack()
+        for stl_file in list(filenames_str):
+            part_name = stl_file.split("/")[-1].replace(".STL","")
+            part_mesh = mesh.Mesh.from_file(stl_file)
+            self.label = Label(self.master, text="Reading {} ".format(part_name))
+            self.label.pack()
         
 root = Tk()
 my_gui = QuoteTool(root)

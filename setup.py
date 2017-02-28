@@ -9,4 +9,7 @@ Created on Tue Feb 28 11:02:07 2017
 from distutils.core import setup
 import py2exe
 
-setup(console=['quote.py'])
+setup(console=['quote.py'],
+      install_requires=[
+          'stl',
+      ])
